@@ -15,7 +15,10 @@ import {
   PhoneCall,
   UserCheck,
   Layers,
-  ArrowRight
+  ArrowRight,
+  CheckCircle2,
+  XCircle,
+  BarChart3
 } from 'lucide-react';
 import CsvUpload from '../components/CsvUpload';
 import CsvPreviewTable from '../components/CsvPreviewTable';
@@ -46,7 +49,7 @@ interface SkippedRecord {
 }
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<'sources' | 'dashboard'>('sources');
+  const [activeTab, setActiveTab] = useState<'sources' | 'dashboard' | 'generate' | 'manage' | 'team' | 'ads' | 'tele' | 'fields'>('sources');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalStep, setModalStep] = useState<1 | 2 | 3 | 4>(1);
 
@@ -200,6 +203,54 @@ export default function Home() {
     setModalStep(4); // Advance to results
   };
 
+  const getHeaderInfo = () => {
+    switch (activeTab) {
+      case 'dashboard':
+        return {
+          title: 'Dashboard Overview',
+          subtitle: 'Monitor your overall CRM lead acquisition and system performance.'
+        };
+      case 'generate':
+        return {
+          title: 'Generate Leads',
+          subtitle: 'Configure automated generation settings and sync live ad campaigns.'
+        };
+      case 'manage':
+        return {
+          title: 'Manage Leads',
+          subtitle: 'View, edit, search, and audit your imported CRM contacts.'
+        };
+      case 'team':
+        return {
+          title: 'Team Members',
+          subtitle: 'Manage administrative roles, telecalling assignments, and access rights.'
+        };
+      case 'ads':
+        return {
+          title: 'Ad Accounts',
+          subtitle: 'Connect and authorize Facebook and Google Ad accounts to sync leads.'
+        };
+      case 'tele':
+        return {
+          title: 'Tele Calling Settings',
+          subtitle: 'Integrate virtual numbers, manage dialers, and review caller agent logs.'
+        };
+      case 'fields':
+        return {
+          title: 'CRM Fields Reference',
+          subtitle: 'Standard CRM lead fields that our AI mapping engine validates and targets.'
+        };
+      case 'sources':
+      default:
+        return {
+          title: 'Lead Sources',
+          subtitle: 'Connect, manage, and control all your lead channels from one dashboard.'
+        };
+    }
+  };
+
+  const headerInfo = getHeaderInfo();
+
   return (
     <div className="dashboard-container">
       {/* Sidebar navigation */}
@@ -222,13 +273,19 @@ export default function Home() {
               </a>
             </li>
             <li>
-              <a className="nav-item">
+              <a 
+                className={`nav-item ${activeTab === 'generate' ? 'active' : ''}`}
+                onClick={() => setActiveTab('generate')}
+              >
                 <Zap size={18} />
                 Generate Leads
               </a>
             </li>
             <li>
-              <a className="nav-item">
+              <a 
+                className={`nav-item ${activeTab === 'manage' ? 'active' : ''}`}
+                onClick={() => setActiveTab('manage')}
+              >
                 <Users size={18} />
                 Manage Leads
               </a>
@@ -240,7 +297,10 @@ export default function Home() {
           <div className="nav-section-title">Control Center</div>
           <ul className="nav-list">
             <li>
-              <a className="nav-item">
+              <a 
+                className={`nav-item ${activeTab === 'team' ? 'active' : ''}`}
+                onClick={() => setActiveTab('team')}
+              >
                 <UserCheck size={18} />
                 Team Members
               </a>
@@ -255,19 +315,28 @@ export default function Home() {
               </a>
             </li>
             <li>
-              <a className="nav-item">
+              <a 
+                className={`nav-item ${activeTab === 'ads' ? 'active' : ''}`}
+                onClick={() => setActiveTab('ads')}
+              >
                 <Globe size={18} />
                 Ad Accounts
               </a>
             </li>
             <li>
-              <a className="nav-item">
+              <a 
+                className={`nav-item ${activeTab === 'tele' ? 'active' : ''}`}
+                onClick={() => setActiveTab('tele')}
+              >
                 <PhoneCall size={18} />
                 Tele Calling
               </a>
             </li>
             <li>
-              <a className="nav-item">
+              <a 
+                className={`nav-item ${activeTab === 'fields' ? 'active' : ''}`}
+                onClick={() => setActiveTab('fields')}
+              >
                 <FolderTree size={18} />
                 CRM Fields
               </a>
@@ -288,16 +357,18 @@ export default function Home() {
       <main className="main-content">
         <header className="header-container">
           <div className="page-title-group">
-            <h1 className="page-title">Lead Sources</h1>
-            <p className="page-subtitle">Connect, manage, and control all your lead channels from one dashboard.</p>
+            <h1 className="page-title">{headerInfo.title}</h1>
+            <p className="page-subtitle">{headerInfo.subtitle}</p>
           </div>
-          <button className="btn btn-primary" onClick={openModal}>
-            <Plus size={16} />
-            Import CSV File
-          </button>
+          {(activeTab === 'sources' || activeTab === 'dashboard' || activeTab === 'manage') && (
+            <button className="btn btn-primary" onClick={openModal}>
+              <Plus size={16} />
+              Import CSV File
+            </button>
+          )}
         </header>
 
-        {activeTab === 'sources' ? (
+        {activeTab === 'sources' && (
           <div className="glass-panel" style={{ padding: '36px' }}>
             <h2 style={{ fontSize: '20px', marginBottom: '24px', fontWeight: 700 }}>Connect Active Lead Integrations</h2>
             
@@ -312,7 +383,7 @@ export default function Home() {
                   </div>
                 </div>
                 <p style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Automate pulling leads generated from Google Search, Display, and Video campaigns directly into your CRM.</p>
-                <button className="btn btn-secondary" style={{ marginTop: 'auto', width: '100%' }}>Connect Account</button>
+                <button className="btn btn-secondary" style={{ marginTop: 'auto', width: '100%' }} onClick={() => setActiveTab('ads')}>Connect Account</button>
               </div>
 
               {/* Facebook Ads Card */}
@@ -325,7 +396,7 @@ export default function Home() {
                   </div>
                 </div>
                 <p style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Sync your Facebook Instant Forms campaigns to instantly fetch prospective customer leads into GrowEasy.</p>
-                <button className="btn btn-secondary" style={{ marginTop: 'auto', width: '100%' }}>Connect Account</button>
+                <button className="btn btn-secondary" style={{ marginTop: 'auto', width: '100%' }} onClick={() => setActiveTab('ads')}>Connect Account</button>
               </div>
 
               {/* CSV Importer Card */}
@@ -345,10 +416,361 @@ export default function Home() {
               </div>
             </div>
           </div>
-        ) : (
+        )}
+
+        {activeTab === 'dashboard' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+            <div className="stats-grid">
+              <div className="stat-card">
+                <div className="stat-icon-wrapper total">
+                  <Users size={20} />
+                </div>
+                <div className="stat-data">
+                  <span className="stat-value">{importedLeads.length + skippedLeads.length}</span>
+                  <span className="stat-label">Total Handled</span>
+                </div>
+              </div>
+              <div className="stat-card">
+                <div className="stat-icon-wrapper imported">
+                  <CheckCircle2 size={20} style={{ color: 'var(--accent-green)' }} />
+                </div>
+                <div className="stat-data">
+                  <span className="stat-value" style={{ color: 'var(--accent-green)' }}>{importedLeads.length}</span>
+                  <span className="stat-label">Imported CRM Leads</span>
+                </div>
+              </div>
+              <div className="stat-card">
+                <div className="stat-icon-wrapper skipped">
+                  <XCircle size={20} style={{ color: 'var(--accent-red)' }} />
+                </div>
+                <div className="stat-data">
+                  <span className="stat-value" style={{ color: 'var(--accent-red)' }}>{skippedLeads.length}</span>
+                  <span className="stat-label">Skipped (No Contact)</span>
+                </div>
+              </div>
+              <div className="stat-card">
+                <div className="stat-icon-wrapper rate">
+                  <BarChart3 size={20} />
+                </div>
+                <div className="stat-data">
+                  <span className="stat-value" style={{ color: 'var(--accent-coral)' }}>
+                    {importedLeads.length + skippedLeads.length > 0 
+                      ? Math.round((importedLeads.length / (importedLeads.length + skippedLeads.length)) * 100) 
+                      : 0}%
+                  </span>
+                  <span className="stat-label">Success Rate</span>
+                </div>
+              </div>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '24px' }}>
+              <div className="glass-panel" style={{ margin: 0 }}>
+                <h2 style={{ fontSize: '18px', marginBottom: '16px' }}>Quick CRM Summary</h2>
+                <p style={{ fontSize: '14px', color: 'var(--text-secondary)', marginBottom: '16px' }}>
+                  Your lead channels are running. Use the CSV Importer to quickly ingest external databases.
+                </p>
+                <div style={{ display: 'flex', gap: '12px' }}>
+                  <button className="btn btn-primary" onClick={openModal}>Import CSV Database</button>
+                  <button className="btn btn-secondary" onClick={() => setActiveTab('manage')}>View Leads List</button>
+                </div>
+              </div>
+
+              <div className="glass-panel" style={{ margin: 0 }}>
+                <h2 style={{ fontSize: '18px', marginBottom: '16px' }}>Connected Integration Status</h2>
+                <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '13px' }}>
+                  <li style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border-color)', paddingBottom: '8px' }}>
+                    <span>Facebook Sync</span>
+                    <span className="badge badge-grey">Disconnected</span>
+                  </li>
+                  <li style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border-color)', paddingBottom: '8px' }}>
+                    <span>Google Sync</span>
+                    <span className="badge badge-grey">Disconnected</span>
+                  </li>
+                  <li style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <span>AI Mapping Engine</span>
+                    <span className="badge badge-success">Online</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'generate' && (
           <div className="glass-panel">
-            <h2 style={{ fontSize: '20px', marginBottom: '16px' }}>Dashboard Overview</h2>
-            <p style={{ color: 'var(--text-secondary)' }}>Select &quot;Lead Sources&quot; in the sidebar or click &quot;Import CSV File&quot; in the header to run the AI importer.</p>
+            <h2 style={{ fontSize: '18px', marginBottom: '16px' }}>Automated Campaign Syncing</h2>
+            <p style={{ fontSize: '14px', color: 'var(--text-secondary)', marginBottom: '24px' }}>
+              Sync and download Facebook or Google Instant Forms leads directly. Connect your accounts to pull incoming leads automatically every 5 minutes.
+            </p>
+            <div style={{ border: '1px solid var(--border-color)', padding: '24px', borderRadius: '8px', textAlign: 'center', backgroundColor: 'var(--bg-primary)' }}>
+              <Zap size={32} style={{ color: 'var(--accent-coral)', marginBottom: '16px' }} />
+              <h3 style={{ fontSize: '16px', marginBottom: '8px' }}>No Active Sync Connections</h3>
+              <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '16px', maxWidth: '400px', margin: '0 auto 16px' }}>
+                Please connect your Facebook Business Manager or Google Ads Client account in the &quot;Ad Accounts&quot; tab to synchronize leads.
+              </p>
+              <button className="btn btn-primary" onClick={() => setActiveTab('ads')}>Go to Ad Accounts</button>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'manage' && (
+          <div className="glass-panel" style={{ padding: '24px', margin: 0 }}>
+            <h2 style={{ fontSize: '18px', marginBottom: '16px' }}>CRM Leads Database</h2>
+            {importedLeads.length === 0 ? (
+              <div style={{ textAlign: 'center', padding: '40px 0' }}>
+                <Users size={36} style={{ color: 'var(--text-muted)', marginBottom: '12px' }} />
+                <h3 style={{ fontSize: '16px', marginBottom: '8px' }}>No Leads in CRM</h3>
+                <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '16px' }}>
+                  Please import a CSV database file using the AI mapping wizard to see your leads here.
+                </p>
+                <button className="btn btn-primary" onClick={openModal}>Import CSV Database</button>
+              </div>
+            ) : (
+              <div className="table-wrapper">
+                <table className="custom-table">
+                  <thead>
+                    <tr>
+                      <th style={{ position: 'sticky', left: 0, zIndex: 4, backgroundColor: 'var(--bg-tertiary)' }}>Name</th>
+                      <th>Contact</th>
+                      <th>Email</th>
+                      <th>Created At</th>
+                      <th>Company</th>
+                      <th>Location</th>
+                      <th>Status</th>
+                      <th>Source</th>
+                      <th>Notes</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {importedLeads.map((record, index) => {
+                      const phoneDisplay = record.country_code
+                        ? `${record.country_code} ${record.mobile_without_country_code}`
+                        : record.mobile_without_country_code || '—';
+                      
+                      const locationDisplay = [record.city, record.state, record.country]
+                        .filter(Boolean)
+                        .join(', ') || '—';
+
+                      return (
+                        <tr key={index}>
+                          <td style={{ fontWeight: 600, color: 'var(--text-primary)', position: 'sticky', left: 0, zIndex: 2, backgroundColor: 'var(--bg-primary)' }}>
+                            {record.name || '—'}
+                          </td>
+                          <td>{phoneDisplay}</td>
+                          <td>{record.email || '—'}</td>
+                          <td>{record.created_at || '—'}</td>
+                          <td>{record.company || '—'}</td>
+                          <td>{locationDisplay}</td>
+                          <td>
+                            {record.crm_status === 'GOOD_LEAD_FOLLOW_UP' && <span className="badge badge-success">Good Lead</span>}
+                            {record.crm_status === 'SALE_DONE' && <span className="badge badge-info">Sale Done</span>}
+                            {record.crm_status === 'BAD_LEAD' && <span className="badge badge-danger">Bad Lead</span>}
+                            {(record.crm_status === 'DID_NOT_CONNECT' || !record.crm_status) && <span className="badge badge-grey">Not Connected</span>}
+                          </td>
+                          <td>
+                            {record.data_source ? <span className="badge badge-warning" style={{ fontSize: '10px' }}>{record.data_source}</span> : '—'}
+                          </td>
+                          <td title={record.crm_note || ''}>{record.crm_note || '—'}</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        )}
+
+        {activeTab === 'team' && (
+          <div className="glass-panel">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+              <h2 style={{ fontSize: '18px' }}>Active CRM Operators</h2>
+              <button className="btn btn-primary" style={{ padding: '6px 12px', fontSize: '12px' }}>
+                <Plus size={14} /> Add Member
+              </button>
+            </div>
+            <div className="table-wrapper">
+              <table className="custom-table">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th>Assigned Leads</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td style={{ fontWeight: 600, color: 'var(--text-primary)' }}>Varun</td>
+                    <td>varun@groweasy.ai</td>
+                    <td><span className="badge badge-info">Administrator</span></td>
+                    <td><span className="badge badge-success">Active</span></td>
+                    <td>All Leads</td>
+                  </tr>
+                  <tr>
+                    <td style={{ fontWeight: 600, color: 'var(--text-primary)' }}>VK Test</td>
+                    <td>owner@groweasy.ai</td>
+                    <td><span className="badge badge-info">Owner</span></td>
+                    <td><span className="badge badge-success">Active</span></td>
+                    <td>All Leads</td>
+                  </tr>
+                  <tr>
+                    <td style={{ fontWeight: 600, color: 'var(--text-primary)' }}>Sarah Jenkins</td>
+                    <td>sarah.j@groweasy.ai</td>
+                    <td><span className="badge badge-grey">Telecaller Agent</span></td>
+                    <td><span className="badge badge-success">Active</span></td>
+                    <td>42 Leads</td>
+                  </tr>
+                  <tr>
+                    <td style={{ fontWeight: 600, color: 'var(--text-primary)' }}>Rajesh Kumar</td>
+                    <td>rajesh.k@groweasy.ai</td>
+                    <td><span className="badge badge-grey">Telecaller Agent</span></td>
+                    <td><span className="badge badge-success">Active</span></td>
+                    <td>15 Leads</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'ads' && (
+          <div className="glass-panel">
+            <h2 style={{ fontSize: '18px', marginBottom: '16px' }}>Authorize Advertising Channels</h2>
+            <p style={{ fontSize: '14px', color: 'var(--text-secondary)', marginBottom: '24px' }}>
+              Authorize GrowEasy to automatically retrieve lead forms from your advertising accounts.
+            </p>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
+              <div style={{ border: '1px solid var(--border-color)', borderRadius: '12px', padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                  <div style={{ width: '48px', height: '48px', backgroundColor: 'rgba(24, 119, 242, 0.1)', color: '#1877F2', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px', fontWeight: 'bold' }}>F</div>
+                  <div>
+                    <h3 style={{ fontSize: '16px' }}>Facebook Business Ads</h3>
+                    <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Status: Disconnected</span>
+                  </div>
+                </div>
+                <p style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Connect page form webhooks to fetch leads instantly as they fill out your instant forms.</p>
+                <button className="btn btn-secondary" style={{ width: '100%', marginTop: 'auto' }}>Link Facebook Account</button>
+              </div>
+
+              <div style={{ border: '1px solid var(--border-color)', borderRadius: '12px', padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                  <div style={{ width: '48px', height: '48px', backgroundColor: 'rgba(66, 133, 244, 0.1)', color: '#4285F4', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px', fontWeight: 'bold' }}>G</div>
+                  <div>
+                    <h3 style={{ fontSize: '16px' }}>Google Lead Form Extension</h3>
+                    <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Status: Disconnected</span>
+                  </div>
+                </div>
+                <p style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Map Search and Display lead form asset webhook endpoints directly to GrowEasy CRM.</p>
+                <button className="btn btn-secondary" style={{ width: '100%', marginTop: 'auto' }}>Link Google Ads Account</button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'tele' && (
+          <div className="glass-panel">
+            <h2 style={{ fontSize: '18px', marginBottom: '16px' }}>Virtual Dialers & Calling Logs</h2>
+            <div style={{ border: '1px solid var(--border-color)', padding: '20px', borderRadius: '8px', backgroundColor: 'var(--bg-primary)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+              <div>
+                <h3 style={{ fontSize: '15px', marginBottom: '4px' }}>Active Calling Line</h3>
+                <p style={{ fontSize: '13px', color: 'var(--accent-coral)', fontWeight: 'bold' }}>+91 98765 00000</p>
+              </div>
+              <span className="badge badge-success">Online & Listening</span>
+            </div>
+            <h3 style={{ fontSize: '15px', marginBottom: '12px' }}>Recent Dialer Logs</h3>
+            <div className="table-wrapper">
+              <table className="custom-table">
+                <thead>
+                  <tr>
+                    <th>Call ID</th>
+                    <th>Lead Name</th>
+                    <th>Destination</th>
+                    <th>Call Duration</th>
+                    <th>Disposition</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>CALL-9018</td>
+                    <td style={{ fontWeight: 600 }}>John Doe</td>
+                    <td>+91 98765 43210</td>
+                    <td>2 mins 15 secs</td>
+                    <td><span className="badge badge-success">GOOD_LEAD_FOLLOW_UP</span></td>
+                  </tr>
+                  <tr>
+                    <td>CALL-9017</td>
+                    <td style={{ fontWeight: 600 }}>Sarah Johnson</td>
+                    <td>+91 98765 43211</td>
+                    <td>0 mins 45 secs</td>
+                    <td><span className="badge badge-grey">DID_NOT_CONNECT</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'fields' && (
+          <div className="glass-panel">
+            <h2 style={{ fontSize: '18px', marginBottom: '16px' }}>GrowEasy Standard CRM Schema</h2>
+            <div className="table-wrapper">
+              <table className="custom-table">
+                <thead>
+                  <tr>
+                    <th>Field Key</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                    <th>Validation Rules</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td style={{ fontWeight: 'bold', color: 'var(--text-primary)' }}>created_at</td>
+                    <td>String (Date)</td>
+                    <td>Lead creation submission date</td>
+                    <td>Must parse with `new Date()`</td>
+                  </tr>
+                  <tr>
+                    <td style={{ fontWeight: 'bold', color: 'var(--text-primary)' }}>name</td>
+                    <td>String</td>
+                    <td>Full name of the lead</td>
+                    <td>Combined if split in CSV</td>
+                  </tr>
+                  <tr>
+                    <td style={{ fontWeight: 'bold', color: 'var(--text-primary)' }}>email</td>
+                    <td>String (Email)</td>
+                    <td>Primary email address of lead</td>
+                    <td>First email selected</td>
+                  </tr>
+                  <tr>
+                    <td style={{ fontWeight: 'bold', color: 'var(--text-primary)' }}>mobile_without_country_code</td>
+                    <td>String (Number)</td>
+                    <td>Calling mobile number (excluding country code)</td>
+                    <td>Digits only</td>
+                  </tr>
+                  <tr>
+                    <td style={{ fontWeight: 'bold', color: 'var(--text-primary)' }}>crm_status</td>
+                    <td>Enum</td>
+                    <td>Lead status label</td>
+                    <td>GOOD_LEAD_FOLLOW_UP, DID_NOT_CONNECT, BAD_LEAD, SALE_DONE</td>
+                  </tr>
+                  <tr>
+                    <td style={{ fontWeight: 'bold', color: 'var(--text-primary)' }}>data_source</td>
+                    <td>Enum</td>
+                    <td>Origin lead source channel</td>
+                    <td>leads_on_demand, meridian_tower, eden_park, varah_swamy, sarjapur_plots</td>
+                  </tr>
+                  <tr>
+                    <td style={{ fontWeight: 'bold', color: 'var(--text-primary)' }}>crm_note</td>
+                    <td>String</td>
+                    <td>Consolidated notes, secondary emails, and extra phones</td>
+                    <td>Parsed dynamically</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
       </main>
