@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
-import { Upload, FileText, X, Download, AlertTriangle } from 'lucide-react';
-import { downloadCSV, STANDARD_CSV_CONTENT, MESSY_CSV_CONTENT } from '../utils/sampleCsv';
+import { Upload, FileText, X, Download } from 'lucide-react';
+import { downloadCSV, MESSY_CSV_CONTENT } from '../utils/sampleCsv';
 
 interface CsvUploadProps {
   onFileSelect: (file: File) => void;
@@ -111,27 +111,11 @@ export default function CsvUpload({ onFileSelect, selectedFile, onClear }: CsvUp
               className="download-template-link"
               onClick={(e) => {
                 e.stopPropagation();
-                downloadCSV('groweasy_crm_template.csv', STANDARD_CSV_CONTENT);
+                downloadCSV('test_leads.csv', MESSY_CSV_CONTENT);
               }}
             >
               <Download size={14} />
-              Download Standard Template
-            </button>
-            <button
-              type="button"
-              className="download-template-link"
-              style={{
-                color: 'var(--accent-coral)',
-                backgroundColor: 'var(--accent-coral-glow)',
-                borderColor: 'rgba(255, 126, 103, 0.2)'
-              }}
-              onClick={(e) => {
-                e.stopPropagation();
-                downloadCSV('groweasy_messy_leads.csv', MESSY_CSV_CONTENT);
-              }}
-            >
-              <AlertTriangle size={14} />
-              Download Messy AI Test Template
+              Download test_leads.csv Template
             </button>
           </div>
         </div>
