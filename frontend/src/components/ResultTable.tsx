@@ -211,7 +211,7 @@ export default function ResultTable({ imported, skipped }: ResultTableProps) {
             <tbody>
               {skipped.map((item, index) => (
                 <tr key={index}>
-                  <td style={{ color: 'var(--accent-red)', fontWeight: 'bold', backgroundColor: 'var(--accent-red-glow)' }}>
+                  <td style={{ color: 'var(--accent-red)', fontWeight: 'bold', backgroundColor: 'var(--accent-red-glow)' }} title={item.reason}>
                     {item.reason}
                   </td>
                   {skippedHeaders.map((header, idx) => (
