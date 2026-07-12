@@ -1,13 +1,11 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Papa from 'papaparse';
 import {
   LayoutDashboard,
   Zap,
   Users,
-  Settings,
-  ShieldCheck,
   Globe,
   Plus,
   X,
@@ -48,7 +46,6 @@ interface SkippedRecord {
 }
 
 export default function Home() {
-  const [mounted, setMounted] = useState(false);
   const [activeTab, setActiveTab] = useState<'sources' | 'dashboard'>('sources');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalStep, setModalStep] = useState<1 | 2 | 3 | 4>(1);
@@ -66,10 +63,6 @@ export default function Home() {
   const [progressSubStatus, setProgressSubStatus] = useState('');
   const [apiError, setApiError] = useState<string | null>(null);
 
-  useEffect(() => {
-    setMounted(true);
-    console.log('[GrowEasy Dashboard] Mounted client-side successfully.');
-  }, []);
 
   // Open / Close Modal
   const openModal = () => {
@@ -177,15 +170,16 @@ export default function Home() {
           } else {
             throw new Error(data.message || 'API import returned success=false');
           }
-        } catch (err: any) {
+        } catch (err: unknown) {
           attempt++;
+          const errorMessage = err instanceof Error ? err.message : 'Unknown error';
           if (attempt >= maxRetries) {
             console.error(`Batch starting at index ${i} failed:`, err);
             // Append these items as skipped instead of failing the whole import
             batch.forEach((row) => {
               accumulatedSkipped.push({
                 record: row,
-                reason: `Failed after ${maxRetries} attempts due to error: ${err.message || 'Unknown error'}`
+                reason: `Failed after ${maxRetries} attempts due to error: ${errorMessage}`
               });
             });
             success = true; // Set success to true to exit loop (we recorded it as skipped)
@@ -354,7 +348,7 @@ export default function Home() {
         ) : (
           <div className="glass-panel">
             <h2 style={{ fontSize: '20px', marginBottom: '16px' }}>Dashboard Overview</h2>
-            <p style={{ color: 'var(--text-secondary)' }}>Select "Lead Sources" in the sidebar or click "Import CSV File" in the header to run the AI importer.</p>
+            <p style={{ color: 'var(--text-secondary)' }}>Select &quot;Lead Sources&quot; in the sidebar or click &quot;Import CSV File&quot; in the header to run the AI importer.</p>
           </div>
         )}
       </main>

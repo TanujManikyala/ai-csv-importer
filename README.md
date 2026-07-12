@@ -85,6 +85,19 @@ The frontend application will be running on `http://localhost:3000`.
 
 ---
 
+## Running with Docker
+
+You can run both the frontend and backend together using Docker and Docker Compose.
+
+1. Ensure you have Docker and Docker Compose installed.
+2. Run the following command from the root directory:
+   ```bash
+   docker-compose up --build
+   ```
+3. The frontend will be available at `http://localhost:3000` and the backend API at `http://localhost:5000`.
+
+---
+
 ## Running Tests
 
 To execute the backend unit tests (checking CSV parsing functionality and edge cases):
