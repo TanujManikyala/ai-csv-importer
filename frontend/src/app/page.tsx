@@ -61,6 +61,8 @@ export default function Home() {
   // AI Import states
   const [importedLeads, setImportedLeads] = useState<CRMRecord[]>([]);
   const [skippedLeads, setSkippedLeads] = useState<SkippedRecord[]>([]);
+  const [currentImported, setCurrentImported] = useState<CRMRecord[]>([]);
+  const [currentSkipped, setCurrentSkipped] = useState<SkippedRecord[]>([]);
   const [progress, setProgress] = useState({ current: 0, total: 0 });
   const [progressStatus, setProgressStatus] = useState('');
   const [progressSubStatus, setProgressSubStatus] = useState('');
@@ -84,8 +86,8 @@ export default function Home() {
     setSelectedFile(null);
     setParsedHeaders([]);
     setParsedRows([]);
-    setImportedLeads([]);
-    setSkippedLeads([]);
+    setCurrentImported([]);
+    setCurrentSkipped([]);
     setProgress({ current: 0, total: 0 });
     setProgressStatus('');
     setProgressSubStatus('');
@@ -198,8 +200,13 @@ export default function Home() {
     }
 
     setProgress({ current: totalRows, total: totalRows });
-    setImportedLeads(accumulatedImported);
-    setSkippedLeads(accumulatedSkipped);
+    setCurrentImported(accumulatedImported);
+    setCurrentSkipped(accumulatedSkipped);
+    
+    // Accumulate in global session lists (for dashboard and leads tab)
+    setImportedLeads((prev) => [...prev, ...accumulatedImported]);
+    setSkippedLeads((prev) => [...prev, ...accumulatedSkipped]);
+    
     setModalStep(4); // Advance to results
   };
 
@@ -849,8 +856,8 @@ export default function Home() {
 
               {modalStep === 4 && (
                 <ResultTable
-                  imported={importedLeads}
-                  skipped={skippedLeads}
+                  imported={currentImported}
+                  skipped={currentSkipped}
                 />
               )}
             </div>
