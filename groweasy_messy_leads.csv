@@ -1,0 +1,6 @@
+Lead Submission Date,Full Client Name,Electronic Mail,Country Dialing,Contact Number,Employer,City Location,State Territory,Nation,Agent Owner,Status,Note Detail,Where Did They Hear About Us,Property Target Possession Time,Additional Info
+2026-06-01 10:15:30,Alice Smith,alice@google.com,+1,5550199,Tech Labs,Seattle,Washington,USA,sales@groweasy.ai,warm callback,"Wants a follow up call tomorrow afternoon. Secondary phone is +1-555-9999",leads_on_demand,Ready to move in,
+2026-06-02 11:20:00,Bob Vance,bob.vance@refrigerator.com,,5550188,Vance Refrigeration,Scranton,Pennsylvania,USA,sales@groweasy.ai,Not Answered,"Voicemail left. Extra email contact: info@refrigeration.com",meridian_tower,In 6 months,
+2026-06-03 14:40:00,Charlie Green,charlie.green@spam.com,+91,9999888877,Spam Corp,Kolkata,West Bengal,India,sales@groweasy.ai,junk,"Spam lead, not interested",unknown,,
+2026-06-04 15:55:12,David Miller,,,9876500001,Construction Inc,Sydney,NSW,Australia,sales@groweasy.ai,Converted,"Deposit paid. Possession next month",eden_park,Immediate,
+2026-06-05 16:10:00,Invalid Record without Contact Details,,,,,,New York,USA,sales@groweasy.ai,no contact,This record should be skipped by the system because it has no email and no phone number,,,
